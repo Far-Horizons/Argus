@@ -36,8 +36,6 @@ class MonitoringManager:
     # Runs a single target's scans
     def run_target_scan(self):
         target = self.target_manager.get_target()
-        if target is not None:
-            domain_name_underscores = target.replace('.', '_')
 
         # load and clear historical data
         print_non_silent(self, f"[[MONITOR DEBUG]] Loading historigy for target: {target}, and clearing previous findings...")
@@ -65,5 +63,7 @@ class MonitoringManager:
             notification_manager = NotificationManager.NotificationManager(self.config, target)
             notification_manager.notify_new_findings()
             print_non_silent(self, f"[[MONITOR DEBUG]] User notified for target: {target}")
+        else:
+            print_non_silent(self, f"[[MONITOR DEBUG]] No new findings for target: {target}, skipping notification.")
         
         self.target_manager.next_target()

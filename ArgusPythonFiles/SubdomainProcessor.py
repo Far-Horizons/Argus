@@ -12,8 +12,8 @@ class SubdomainProcessor:
     def run(self):
         self.merge_subdomain_files()
         self.check_alive()
-        self.check_accessible()
         self.check_responsive()
+        self.check_accessible()
     
     def merge_subdomain_files(self):
         print_non_silent(self, "Merging the subdomain files...")
@@ -61,7 +61,7 @@ class SubdomainProcessor:
         with open(os.path.expanduser(f"~/Argus/{self.domain_name}/accessible-{self.domain_name}.txt"), "w") as accessible_file:
             subprocess.run(
                 ["ffuf", "-u", "https://FUZZ",
-                "-w", os.path.expanduser(f"~/Argus/{self.domain_name}/alive-{self.domain_name}.txt"),
+                "-w", os.path.expanduser(f"~/Argus/{self.domain_name}/responsive-{self.domain_name}.txt"),
                 "-s", "-fc", "404,403,401"],
                 check=True,
                 stdout=accessible_file,
