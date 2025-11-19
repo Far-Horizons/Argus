@@ -32,9 +32,11 @@ class SubdomainProcessor:
     # merge the collected subdomain files into the file containing all the subdomains of this target that have ever been found. then remove the temporary file containing the collected subdomains
     def add_new_subdomains_to_master_file(self):
         print_non_silent(self, "Adding new subdomains to the master subdomain file...\n")
+        if not os.path.exists(os.path.expanduser(f"~/Argus/{self.domain_name}/master_subdomain_list-{self.domain_name}.txt")):
+            open(os.path.expanduser(f"~/Argus/{self.domain_name}/master_subdomain_list-{self.domain_name}.txt"), "w").close()
         merge_lists(self, os.path.expanduser(f"~/Argus/{self.domain_name}/domains_all_collected-{self.domain_name}.txt"),
-                             os.path.expanduser(f"~/Argus/master_subdomain_list-{self.domain_name}.txt"),
-                             os.path.expanduser(f"~/Argus/master_subdomain_list-{self.domain_name}.txt")
+                             os.path.expanduser(f"~/Argus/{self.domain_name}/master_subdomain_list-{self.domain_name}.txt"),
+                             os.path.expanduser(f"~/Argus/{self.domain_name}/master_subdomain_list-{self.domain_name}.txt")
                              )
         if os.path.exists(os.path.expanduser(f"~/Argus/{self.domain_name}/domains_all_collected-{self.domain_name}.txt")):
             os.remove(os.path.expanduser(f"~/Argus/{self.domain_name}/domains_all_collected-{self.domain_name}.txt"))
