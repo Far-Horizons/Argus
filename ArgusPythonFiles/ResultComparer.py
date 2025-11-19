@@ -8,7 +8,7 @@ class ResultComparer:
         self.domain_name = self.target.replace('.', '_')
         self.historical_data = historical_data
         self.current_data_directory = os.path.expanduser(f"~/Argus/{self.domain_name}/")
-        self.current_data_all_subdomains = self._load_new_data("domains_all")
+        self.current_data_all_subdomains = self._load_new_data("master_subdomain_list")
         self.current_data_alive_subdomains = self._load_new_data("alive")
         self.current_data_responsive_subdomains = self._load_new_data("responsive")
         self.current_data_accessible_subdomains = self._load_new_data("accessible")
