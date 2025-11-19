@@ -11,6 +11,7 @@ class SubdomainProcessor:
 
     def run(self):
         self.merge_collected_subdomain_files()
+        self.add_new_subdomains_to_master_file()
         self.check_alive()
         self.check_responsive()
         self.check_accessible()
