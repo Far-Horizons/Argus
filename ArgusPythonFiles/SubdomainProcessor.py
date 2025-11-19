@@ -10,16 +10,16 @@ class SubdomainProcessor:
         self.target = target
 
     def run(self):
-        self.merge_subdomain_files()
+        self.merge_collected_subdomain_files()
         self.check_alive()
         self.check_responsive()
         self.check_accessible()
     
-    def merge_subdomain_files(self):
+    def merge_collected_subdomain_files(self):
         print_non_silent(self, "Merging the subdomain files...")
         merge_lists(self, os.path.expanduser(f"~/Argus/{self.domain_name}/domains_subfinder-{self.domain_name}.txt"),
                              os.path.expanduser(f"~/Argus/{self.domain_name}/domains_findomain-{self.domain_name}.txt"),
-                             os.path.expanduser(f"~/Argus/{self.domain_name}/domains_all-{self.domain_name}.txt")
+                             os.path.expanduser(f"~/Argus/{self.domain_name}/domains_all_collected-{self.domain_name}.txt")
                              )
         subprocess.run(
                     ["rm", os.path.expanduser(f"~/Argus/{self.domain_name}/domains_subfinder-{self.domain_name}.txt"),
@@ -28,12 +28,23 @@ class SubdomainProcessor:
                 )
         print_non_silent(self, "Finished merging the subdomain files")
 
+    # merge the collected subdomain files into the file containing all the subdomains of this target that have ever been found. then remove the temporary file containing the collected subdomains
+    def add_new_subdomains_to_master_file(self):
+        print_non_silent(self, "Adding new subdomains to the master subdomain file...\n")
+        merge_lists(self, os.path.expanduser(f"~/Argus/{self.domain_name}/domains_all_collected-{self.domain_name}.txt"),
+                             os.path.expanduser(f"~/Argus/master_subdomain_list-{self.domain_name}.txt"),
+                             os.path.expanduser(f"~/Argus/master_subdomain_list-{self.domain_name}.txt")
+                             )
+        if os.path.exists(os.path.expanduser(f"~/Argus/{self.domain_name}/domains_all_collected-{self.domain_name}.txt")):
+            os.remove(os.path.expanduser(f"~/Argus/{self.domain_name}/domains_all_collected-{self.domain_name}.txt"))
+        print_non_silent(self, "Finished adding new subdomains to the master subdomain file.\n")
+
     # This method checks if the subdomains are alive
     def check_alive(self):
         print_non_silent(self, "checking which subdomains are alive...")
         subprocess.run(
             ["dnsx",
-            "-l", os.path.expanduser(f"~/Argus/{self.domain_name}/domains_all-{self.domain_name}.txt"), "-o",
+            "-l", os.path.expanduser(f"~/Argus/{self.domain_name}/master_subdomain_list-{self.domain_name}.txt"), "-o",
             os.path.expanduser(f"~/Argus/{self.domain_name}/alive-{self.domain_name}.txt"),
             "-silent"],
             check=True,
