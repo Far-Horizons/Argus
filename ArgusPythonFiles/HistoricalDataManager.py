@@ -23,7 +23,7 @@ class HistoricalDataManager:
             return [line.strip() for line in f if line.strip()]
 
     def clear_old_data_file(self):
-        for type in ["master_subdomain_list", "alive", "responsive", "accessible"]:
+        for type in ["alive", "responsive", "accessible"]:
             file_path = os.path.expanduser(f"{self.historical_data_directory}{type}-{self.domain_name}.txt")
             if os.path.exists(file_path):
                 os.remove(file_path)
