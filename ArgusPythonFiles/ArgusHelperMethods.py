@@ -52,6 +52,10 @@ def normalize_domain(self, domain):
         d = d[:-1]
     if d.startswith("."): # remove leading dot
         d = d[1:]
+    if d.endswith("_"): # remove trailing underscore
+        d = d[:-1]
+    if d.startswith("_"): # remove leading underscore
+        d = d[1:]
     d = d.lower()
 
     # sanity checks:
