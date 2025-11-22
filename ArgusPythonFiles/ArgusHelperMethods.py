@@ -48,6 +48,10 @@ def normalize_domain(self, domain):
     d = d.split("/", 1)[0] # remove trailing / or entire paths
     if d.startswith("*."): # remove wildcard prefix
         d = d[2:]
+    if d.endswith("."): # remove trailing dot
+        d = d[:-1]
+    if d.startswith("."): # remove leading dot
+        d = d[1:]
     d = d.lower()
 
     # sanity checks:
