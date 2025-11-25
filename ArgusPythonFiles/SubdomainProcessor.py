@@ -30,13 +30,15 @@ class SubdomainProcessor:
                     self.findomain_filepath,
                     self.domains_all_collected_filepath
                     )
-        merge_lists(self, self.master_subdomain_list_filepath,
-                    self.gobuster_filepath,
-                    self.master_subdomain_list_filepath
-                    )
+        if self.config.bruteforce:
+            merge_lists(self, self.master_subdomain_list_filepath,
+                        self.gobuster_filepath,
+                        self.master_subdomain_list_filepath
+                        )
         os.remove(self.subfinder_filepath)
         os.remove(self.findomain_filepath)
-        os.remove(self.gobuster_filepath)
+        if self.config.bruteforce:
+            os.remove(self.gobuster_filepath)
         print_non_silent(self, "Finished merging the subdomain files")
 
     # merge the collected subdomain files into the file containing all the subdomains of this target that have ever been found. then remove the temporary file containing the collected subdomains

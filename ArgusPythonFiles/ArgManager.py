@@ -47,3 +47,10 @@ class ArgManager:
             action='store_true',
             help="Enable debug mode for monitoring, which forces it to not be silent and print debug information to the console."
         )
+
+        self.parser.add_argument(
+            "-b", "--bruteforce",
+            default=False,
+            action='store_true',
+            help="Enable bruteforcing mode, which makes Argus attempt to bruteforce any new subdomains using GoBuster on every cycle. This uses the SubdomainBruteforceWordlists.txt in your Argus folder"
+        )

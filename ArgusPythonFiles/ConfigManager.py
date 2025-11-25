@@ -22,3 +22,4 @@ class ConfigManager:
             self.silent = False
         if (self.args.monitoring_mode and self.args.monitor_debug):
             self.silent = False
+        self.bruteforce = self.args.bruteforce
