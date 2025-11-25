@@ -2,6 +2,7 @@
 # This will keep running until the process dies by intervention or error
 import time
 import SubdomainCollector
+import SubdomainBruteforcer
 import SubdomainProcessor
 import TargetManager
 import HistoricalDataManager
@@ -47,6 +48,8 @@ class MonitoringManager:
         print_non_silent(self, f"[[MONITOR DEBUG]] Starting scans for target: {target}")
         collector = SubdomainCollector.SubdomainCollector(self.config, target)
         collector.run()
+        bruteforcer = SubdomainBruteforcer.SubdomainBruteforcer(self.config, target)
+        bruteforcer.run()
         processor = SubdomainProcessor.SubdomainProcessor(self.config, target)
         processor.run()
         print_non_silent(self, f"[[MONITOR DEBUG]] Finished scans for target: {target}")
