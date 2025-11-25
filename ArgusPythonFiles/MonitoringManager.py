@@ -48,11 +48,11 @@ class MonitoringManager:
         print_non_silent(self, f"[[MONITOR DEBUG]] Starting scans for target: {target}")
         collector = SubdomainCollector.SubdomainCollector(self.config, target)
         collector.run()
-        bruteforcer = SubdomainBruteforcer.SubdomainBruteforcer(self.config, target)
-        bruteforcer.run()
         if self.config.bruteforce:
-            processor = SubdomainProcessor.SubdomainProcessor(self.config, target)
-            processor.run()
+            bruteforcer = SubdomainBruteforcer.SubdomainBruteforcer(self.config, target)
+            bruteforcer.run()
+        processor = SubdomainProcessor.SubdomainProcessor(self.config, target)
+        processor.run()
         print_non_silent(self, f"[[MONITOR DEBUG]] Finished scans for target: {target}")
         
         # compare the results
