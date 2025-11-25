@@ -61,7 +61,8 @@ class SubdomainProcessor:
             ["dnsx",
             "-l", self.master_subdomain_list_filepath, 
             "-o", self.alive_filepath,
-            "-silent"],
+            "-silent",
+            "-retry", "5"],
             check=True,
             stdout=subprocess.DEVNULL
         )
