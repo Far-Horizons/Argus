@@ -8,6 +8,14 @@ class SubdomainProcessor:
         self.config = configuration
         self.domain_name = target.replace('.', '_')
         self.target = target
+        self.subfinder_filepath = os.path.expanduser(f"~/Argus/{self.domain_name}/domains_subfinder-{self.domain_name}.txt")
+        self.findomain_filepath = os.path.expanduser(f"~/Argus/{self.domain_name}/domains_findomain-{self.domain_name}.txt")
+        self.gobuster_filepath = os.path.expanduser(f"~/Argus/{self.domain_name}/domains_gobuster-{self.domain_name}.txt")
+        self.domains_all_collected_filepath = os.path.expanduser(f"~/Argus/{self.domain_name}/domains_all_collected-{self.domain_name}.txt")
+        self.master_subdomain_list_filepath = os.path.expanduser(f"~/Argus/{self.domain_name}/master_subdomain_list-{self.domain_name}.txt")
+        self.alive_filepath = os.path.expanduser(f"~/Argus/{self.domain_name}/alive-{self.domain_name}.txt")
+        self.responsive_filepath = os.path.expanduser(f"~/Argus/{self.domain_name}/responsive-{self.domain_name}.txt")
+        self.accessible_filepath = os.path.expanduser(f"~/Argus/{self.domain_name}/accessible-{self.domain_name}.txt")
 
     def run(self):
         self.merge_collected_subdomain_files()
@@ -18,28 +26,30 @@ class SubdomainProcessor:
     
     def merge_collected_subdomain_files(self):
         print_non_silent(self, "Merging the subdomain files...")
-        merge_lists(self, os.path.expanduser(f"~/Argus/{self.domain_name}/domains_subfinder-{self.domain_name}.txt"),
-                             os.path.expanduser(f"~/Argus/{self.domain_name}/domains_findomain-{self.domain_name}.txt"),
-                             os.path.expanduser(f"~/Argus/{self.domain_name}/domains_all_collected-{self.domain_name}.txt")
-                             )
-        subprocess.run(
-                    ["rm", os.path.expanduser(f"~/Argus/{self.domain_name}/domains_subfinder-{self.domain_name}.txt"),
-                    os.path.expanduser(f"~/Argus/{self.domain_name}/domains_findomain-{self.domain_name}.txt")],
-                    check=True
-                )
+        merge_lists(self, self.subfinder_filepath,
+                    self.findomain_filepath,
+                    self.domains_all_collected_filepath
+                    )
+        merge_lists(self, self.master_subdomain_list_filepath,
+                    self.gobuster_filepath,
+                    self.master_subdomain_list_filepath
+                    )
+        os.remove(self.subfinder_filepath)
+        os.remove(self.findomain_filepath)
+        os.remove(self.gobuster_filepath)
         print_non_silent(self, "Finished merging the subdomain files")
 
     # merge the collected subdomain files into the file containing all the subdomains of this target that have ever been found. then remove the temporary file containing the collected subdomains
     def add_new_subdomains_to_master_file(self):
         print_non_silent(self, "Adding new subdomains to the master subdomain file...\n")
-        if not os.path.exists(os.path.expanduser(f"~/Argus/{self.domain_name}/master_subdomain_list-{self.domain_name}.txt")):
-            open(os.path.expanduser(f"~/Argus/{self.domain_name}/master_subdomain_list-{self.domain_name}.txt"), "w").close()
-        merge_lists(self, os.path.expanduser(f"~/Argus/{self.domain_name}/domains_all_collected-{self.domain_name}.txt"),
-                             os.path.expanduser(f"~/Argus/{self.domain_name}/master_subdomain_list-{self.domain_name}.txt"),
-                             os.path.expanduser(f"~/Argus/{self.domain_name}/master_subdomain_list-{self.domain_name}.txt")
+        if not os.path.exists(self.master_subdomain_list_filepath):
+            open(self.master_subdomain_list_filepath, "w").close()
+        merge_lists(self, self.domains_all_collected_filepath,
+                             self.master_subdomain_list_filepath,
+                             self.master_subdomain_list_filepath
                              )
-        if os.path.exists(os.path.expanduser(f"~/Argus/{self.domain_name}/domains_all_collected-{self.domain_name}.txt")):
-            os.remove(os.path.expanduser(f"~/Argus/{self.domain_name}/domains_all_collected-{self.domain_name}.txt"))
+        if os.path.exists(self.domains_all_collected_filepath):
+            os.remove(self.domains_all_collected_filepath)
         print_non_silent(self, "Finished adding new subdomains to the master subdomain file.\n")
 
     # This method checks if the subdomains are alive
@@ -47,8 +57,8 @@ class SubdomainProcessor:
         print_non_silent(self, "checking which subdomains are alive...")
         subprocess.run(
             ["dnsx",
-            "-l", os.path.expanduser(f"~/Argus/{self.domain_name}/master_subdomain_list-{self.domain_name}.txt"), "-o",
-            os.path.expanduser(f"~/Argus/{self.domain_name}/alive-{self.domain_name}.txt"),
+            "-l", self.master_subdomain_list_filepath, 
+            "-o", self.alive_filepath,
             "-silent"],
             check=True,
             stdout=subprocess.DEVNULL
@@ -58,10 +68,10 @@ class SubdomainProcessor:
     # This method checks if the subdomains are responsive
     def check_responsive(self):
         print_non_silent(self, "checking which subdomains are responsive...")
-        with open(os.path.expanduser(f"~/Argus/{self.domain_name}/responsive-{self.domain_name}.txt"), "w") as responsive_file:
+        with open(self.responsive_filepath, "w") as responsive_file:
             subprocess.run(
                 ["ffuf", "-u", "https://FUZZ",
-                "-w", os.path.expanduser(f"~/Argus/{self.domain_name}/alive-{self.domain_name}.txt"),
+                "-w", self.alive_filepath,
                 "-s"],
                 check=True,
                 stdout=responsive_file,
@@ -72,10 +82,10 @@ class SubdomainProcessor:
     # This method checks which subdomains are accessible
     def check_accessible(self):
         print_non_silent(self, "checking which subdomains are accessible...")
-        with open(os.path.expanduser(f"~/Argus/{self.domain_name}/accessible-{self.domain_name}.txt"), "w") as accessible_file:
+        with open(self.accessible_filepath, "w") as accessible_file:
             subprocess.run(
                 ["ffuf", "-u", "https://FUZZ",
-                "-w", os.path.expanduser(f"~/Argus/{self.domain_name}/responsive-{self.domain_name}.txt"),
+                "-w", self.responsive_filepath,
                 "-s", "-fc", "404,403,401"],
                 check=True,
                 stdout=accessible_file,

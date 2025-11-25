@@ -1,4 +1,5 @@
 # Handles logging, writes to a txt file. Single-run object, it is invoked whenever logging is needed, then dies
+# Not properly implemented yet.
 import os
 
 class Logger:
