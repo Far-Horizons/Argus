@@ -33,7 +33,7 @@ class SubdomainProcessor:
         if self.config.bruteforce:
             merge_lists(self, self.domains_all_collected_filepath,
                         self.gobuster_filepath,
-                        self.master_subdomain_list_filepath
+                        self.domains_all_collected_filepath
                         )
         os.remove(self.subfinder_filepath)
         os.remove(self.findomain_filepath)
