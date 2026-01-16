@@ -28,7 +28,7 @@ class ResultComparer:
     def compare_lists(self):
         self.new_subdomains = list(set(self.current_data_all_subdomains) - set(self.historical_data.historical_data_all_subdomains))
         self.new_alive_subdomains = list(set(self.current_data_alive_subdomains) - set(self.historical_data.historical_data_alive_subdomains))
-        # self.new_responsive_subdomains = list(set(self.current_data_responsive_subdomains) - set(self.historical_data.historical_data_responsive_subdomains))
+        self.new_responsive_subdomains = list(set(self.current_data_responsive_subdomains) - set(self.historical_data.historical_data_responsive_subdomains))
         # self.new_accessible_subdomains = list(set(self.current_data_accessible_subdomains) - set(self.historical_data.historical_data_accessible_subdomains))
     
     def create_reports(self):
@@ -44,10 +44,10 @@ class ResultComparer:
             for subdomain in self.new_alive_subdomains:
                 report_file.write(f"{subdomain}\n")
 
-            # if len(self.new_responsive_subdomains) > 0:
-            #     report_file.write("\nNew Responsive Subdomains:\n")
-            # for subdomain in self.new_responsive_subdomains:
-            #     report_file.write(f"{subdomain}\n")
+            if len(self.new_responsive_subdomains) > 0:
+                report_file.write("\nNew Responsive Subdomains:\n")
+            for subdomain in self.new_responsive_subdomains:
+                report_file.write(f"{subdomain}\n")
 
             # if len(self.new_accessible_subdomains) > 0:
             #     report_file.write("\nNew Accessible Subdomains:\n")
@@ -56,10 +56,13 @@ class ResultComparer:
     
     def has_new_findings(self):
         return (len(self.new_subdomains) > 0 or
-                len(self.new_alive_subdomains) > 0 # or
-                # len(self.new_responsive_subdomains) > 0 or
+                len(self.new_alive_subdomains) > 0 or
+                len(self.new_responsive_subdomains) > 0 # or
                 # len(self.new_accessible_subdomains) > 0
                 )
+    
+    def has_new_responsive_findings(self):
+        return (len(self.new_responsive_subdomains) > 0)
     
     def clear_old_reports(self):
         report_path = os.path.expanduser(f"~/Argus/{self.domain_name}/new_subdomains_report-{self.domain_name}.txt")

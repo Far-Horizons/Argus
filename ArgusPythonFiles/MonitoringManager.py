@@ -15,6 +15,7 @@ class MonitoringManager:
         self.config = configuration
         self.target = ""
         self.target_manager = TargetManager.TargetManager(configuration) # creates the target manager object, which will persist throughout the monitoring session
+        self.cycleCount = 0
 
     # Starts the monitoring loop
     def start_monitoring(self):
@@ -32,7 +33,8 @@ class MonitoringManager:
             if self.target_manager.cycle_completion_check():
                 print_non_silent(self, "[[MONITOR DEBUG]] Break condition met (completed a full cycle)")
                 break
-        print_non_silent(self, "[[MONITOR DEBUG]] End of the monitoring cycle")
+        self.cycleCount += 1
+        print_non_silent(self, f"[[MONITOR DEBUG]] End of monitoring cycle {self.cycleCount}.")
 
     # Runs a single target's scans
     def run_target_scan(self):
@@ -67,6 +69,12 @@ class MonitoringManager:
             notification_manager = NotificationManager.NotificationManager(self.config, target)
             notification_manager.notify_new_findings()
             print_non_silent(self, f"[[MONITOR DEBUG]] User notified for target: {target}")
+
+            if comparer.has_new_responsive_findings() and self.config.screenshots:
+                print_non_silent(self, f"[[MONITOR DEBUG]] New responsive domains detected for target: {target}, taking screenshots...")
+                notification_manager.run_screenshot_cycle(comparer.new_responsive_subdomains, self.config.screenshot_webhook)
+                print_non_silent(self, f"[[MONITOR DEBUG]] Screenshots of new responsive domains for {target} have been sent to the screenshot webhook")
+
         else:
             print_non_silent(self, f"[[MONITOR DEBUG]] No new findings for target: {target}, skipping notification.")
         

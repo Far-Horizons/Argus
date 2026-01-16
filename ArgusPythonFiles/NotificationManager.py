@@ -2,6 +2,7 @@
 # Single run process spun up when needed, then dies
 import os
 import subprocess
+import Screenshotter
 
 class NotificationManager:
     def __init__(self, configuration, target):
@@ -19,4 +20,7 @@ class NotificationManager:
                  "-bulk"],
                  check=True
             )
-        
+    
+    def run_screenshot_cycle(self, targetlist, webhookURL):
+        ss = Screenshotter.Screenshotter(targetlist, webhookURL)
+        ss.run()

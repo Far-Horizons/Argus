@@ -10,3 +10,6 @@ venv/
 # IDE/project files
 .vscode/
 .idea/
+
+# workspace
+*.code-workspace

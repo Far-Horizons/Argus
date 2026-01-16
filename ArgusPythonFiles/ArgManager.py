@@ -54,3 +54,30 @@ class ArgManager:
             action='store_true',
             help="Enable bruteforcing mode, which makes Argus attempt to bruteforce any new subdomains using GoBuster on every cycle. This uses the SubdomainBruteforceWordlists.txt in your Argus folder"
         )
+
+        self.parser.add_argument(
+            "-tr", "--threads-responsive",
+            type = int,
+            default = 1,
+            help="Set a multiplier for the threads used for checking if subdomains are responsive. Default is a multiplier of 1. A higher multiplier will result in higher speed, but might lead to rate-limiting"
+        )
+
+        self.parser.add_argument(
+            "-ta", "--threads-accesible",
+            type = int,
+            default = 1,
+            help="Set a multiplier for the threads used for checking if subdomains are accessible. Default is a multiplier of 1. A higher multiplier will result in higher speed, but might lead to rate-limiting"
+        )
+
+        self.parser.add_argument(
+            "--screenshots",
+            default=False,
+            action='store_true',
+            help='Enable screenshot capturing and sending (to webhook) of new responsive subdomains found during monitoring.'
+        )
+
+        self.parser.add_argument(
+            "--screenshotwebhook",
+            type= str,
+            help="Set the webhook to which the screenshots will be sent (needed as screenshots do not rely upon PDs notify)"
+        )

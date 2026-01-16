@@ -23,3 +23,6 @@ class ConfigManager:
         if (self.args.monitoring_mode and self.args.monitor_debug):
             self.silent = False
         self.bruteforce = self.args.bruteforce
+        self.screenshots = self.args.screenshots
+        if self.screenshots == True:
+            self.screenshot_webhook = self.args.screenshotwebhook
