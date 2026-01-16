@@ -22,5 +22,5 @@ class NotificationManager:
             )
     
     def run_screenshot_cycle(self, targetlist, webhookURL):
-        ss = Screenshotter.Screenshotter(targetlist, webhookURL)
+        ss = Screenshotter.Screenshotter(targetlist, webhookURL, self.config)
         ss.run()

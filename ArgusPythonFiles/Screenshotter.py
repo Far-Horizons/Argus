@@ -7,10 +7,11 @@ from time import sleep
 import shutil
 
 class Screenshotter:
-    def __init__(self, targetlist, webhookURL):
+    def __init__(self, targetlist, webhookURL, config):
         self.targetlist: list = targetlist    #target is provided as a list of URLs or IPs
         self.webhookURL: str =  webhookURL
         self.valid_ext = ".jpeg"
+        self.config = config
         self.screenshotpath = os.path.expanduser("~/Argus/gowitness_screenshots")
     
     def run(self):
