@@ -36,8 +36,7 @@ class Screenshotter:
                     "-u", f"http://{target}",
                     "--screenshot-fullpage",
                     "--screenshot-path", f"{self.screenshotpath}"],
-                    check=True,
-                    stdout=subprocess.DEVNULL)
+                    check=True)
                 print_non_silent(self, f"\ntook a screenshot of http://{target}")
             except subprocess.CalledProcessError as e:
                 print_non_silent(self, f"Failed to screenshot http://{target}: {e}")
@@ -47,8 +46,7 @@ class Screenshotter:
                     "-u", f"https://{target}",
                     "--screenshot-fullpage",
                     "--screenshot-path", f"{self.screenshotpath}"],
-                    check=True,
-                    stdout=subprocess.DEVNULL)
+                    check=True)
                 print_non_silent(self, f"\ntook a screenshot of https://{target}")
             except subprocess.CalledProcessError as e:
                 print_non_silent(self, f"Failed to screenshot https://{target}: {e}")
