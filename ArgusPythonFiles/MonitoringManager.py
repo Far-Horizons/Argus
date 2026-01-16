@@ -70,7 +70,7 @@ class MonitoringManager:
             notification_manager.notify_new_findings()
             print_non_silent(self, f"[[MONITOR DEBUG]] User notified for target: {target}")
 
-            if comparer.has_new_responsive_findings() and self.config.screenshots:
+            if comparer.has_new_responsive_findings() and self.config.screenshots and self.cycleCount > 0:
                 print_non_silent(self, f"[[MONITOR DEBUG]] New responsive domains detected for target: {target}, taking screenshots...")
                 notification_manager.run_screenshot_cycle(comparer.new_responsive_subdomains, self.config.screenshot_webhook)
                 print_non_silent(self, f"[[MONITOR DEBUG]] Screenshots of new responsive domains for {target} have been sent to the screenshot webhook")
