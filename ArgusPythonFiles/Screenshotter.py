@@ -29,22 +29,28 @@ class Screenshotter:
 
     def take_screenshot(self, target):
         if target != None:
-            subprocess.run(
-                ["gowitness", "scan", "single",
-                 "-u", f"http://{target}",
-                "--screenshot-fullpage",
-                "--screenshot-path", f"{self.screenshotpath}"],
-                check=True,
-                stdout=subprocess.DEVNULL)
-            print_non_silent(self, f"\ntook a screenshot of http://{target}")
-            subprocess.run(
-                ["gowitness", "scan", "single",
-                 "-u", f"https://{target}",
-                "--screenshot-fullpage",
-                "--screenshot-path", f"{self.screenshotpath}"],
-                check=True,
-                stdout=subprocess.DEVNULL)
-            print_non_silent(self, f"took a screenshot of https://{target}\n")
+            try:
+                subprocess.run(
+                    ["gowitness", "scan", "single",
+                    "-u", f"http://{target}",
+                    "--screenshot-fullpage",
+                    "--screenshot-path", f"{self.screenshotpath}"],
+                    check=True,
+                    stdout=subprocess.DEVNULL)
+                print_non_silent(self, f"\ntook a screenshot of http://{target}")
+            except subprocess.CalledProcessError as e:
+                print_non_silent(self, f"Failed to screenshot http://{target}: {e}")
+            try:
+                subprocess.run(
+                    ["gowitness", "scan", "single",
+                    "-u", f"https://{target}",
+                    "--screenshot-fullpage",
+                    "--screenshot-path", f"{self.screenshotpath}"],
+                    check=True,
+                    stdout=subprocess.DEVNULL)
+                print_non_silent(self, f"\ntook a screenshot of https://{target}")
+            except subprocess.CalledProcessError as e:
+                print_non_silent(self, f"Failed to screenshot https://{target}: {e}")
         
     
     def send_screenshots(self):
